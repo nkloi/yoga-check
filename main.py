@@ -1,4 +1,5 @@
 from telnetlib import FORWARD_X
+from turtle import forward
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -35,10 +36,20 @@ FORWARD_BAND_4 = [[160, 170], [160, 170],[50, 70], [50, 70], [70, 90],[70, 90], 
 FORWARD_BAND_LIST = [FORWARD_BAND_1, FORWARD_BAND_2, FORWARD_BAND_3, FORWARD_BAND_4]
 
 
-IMAGE_FILES.append('image\\forwardBend125.jpg')
-IMAGE_FILES.append('image\\forwardBend200.jpg')
-IMAGE_FILES.append('image\\forwardBend375.jpg')
-IMAGE_FILES.append('image\\forwardBend500.jpg')
+# IMAGE_FILES.append('image\\forwardBend125.jpg')
+# IMAGE_FILES.append('image\\forwardBend200.jpg')
+# IMAGE_FILES.append('image\\forwardBend375.jpg')
+# IMAGE_FILES.append('image\\forwardBend500.jpg')
+
+# address_image = 'data\\forwardBend500\\' + str(1) + '.' + 'jpg'
+for i in range(30):
+    address_image = 'data\\forwardBend500\\' + str(i+1) + '.' + 'jpg'
+    IMAGE_FILES.append(address_image)
+
+for i in range(30):
+    address_image = 'data\\forwardBend375\\' + str(i+1) + '.' + 'jpg'
+    IMAGE_FILES.append(address_image)
+
 
 BG_COLOR = (192, 192, 192)  # gray
 LIST_POST = ["NOSE", "LEFT_EYE_INNER", "LEFT_EYE", "LEFT_EYE_OUTER", "RIGHT_EYE_INNER", "RIGHT_EYE", "RIGHT_EYE_OUTER",
@@ -107,6 +118,7 @@ def normalized_to_pixel_coordinates(
     y_px = min(math.floor(normalized_y * image_height), image_height - 1)
     return (x_px, y_px)
 
+forwardBend_angle_list = []
 
 if __name__ == '__main__':
     with mp_pose.Pose(
@@ -155,6 +167,13 @@ if __name__ == '__main__':
             
             lic1 = [angle_1, angle_2, angle_3, angle_4, angle_5, angle_6, angle_7, angle_8]
             print(lic1)
+            forwardBend_angle_list.append(lic1)
+
+            with open("data\data.txt", "a") as file:
+                for i in range(len(lic1)):
+                    file.write(str(round(lic1[i])) + " ")
+                file.write("\n")
+
             is_yoga_pose, color, mask = pose_detection(lic1, FORWARD_BAND_LIST)
             print(is_yoga_pose)
 
@@ -190,9 +209,9 @@ if __name__ == '__main__':
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
             cv2.imwrite('/tmp/annotated_image' + str(idx) + '.png', annotated_image)
-            # # Plot pose world landmarks.
-            mp_drawing.plot_landmarks(
-                results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
+            # # # Plot pose world landmarks.
+            # mp_drawing.plot_landmarks(
+            #     results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
 
     # For webcam input:
     # cap = cv2.VideoCapture(0)
