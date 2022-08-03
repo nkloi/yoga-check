@@ -51,6 +51,14 @@ for i in range(30):
 	address_image = 'data\\forwardBend375\\' + str(i+1) + '.' + 'jpg'
 	IMAGE_FILES.append(address_image)
 
+for i in range(30):
+	address_image = 'data\\forwardBend250\\' + str(i+1) + '.' + 'jpg'
+	IMAGE_FILES.append(address_image)
+
+for i in range(30):
+	address_image = 'data\\forwardBend125\\' + str(i+1) + '.' + 'jpg'
+	IMAGE_FILES.append(address_image)
+
 # IMAGE_FILES.append('data\\forwardBend375\\19.jpg')
 
 BG_COLOR = (192, 192, 192)  # gray
@@ -130,114 +138,108 @@ def convert_str2list(image_list):
 
 forwardBend_angle_list = []
 
-with open("data\data.txt", "r") as file:
-	number_image = int(file.readline().strip())
-	for i in range(number_image):
-		image_list = file.readline()
-		list_angle = convert_str2list(image_list)
-		forwardBend_angle_list.append(list_angle)
+# with open("data\data.txt", "r") as file:
+	
+# 	for i in range(120):
+# 		image_list = file.readline()
+# 		list_angle = convert_str2list(image_list)
+# 		forwardBend_angle_list.append(list_angle)
 
-	number_image = int(file.readline().strip())
-	for i in range(number_image):
-		image_list = file.readline()
-		list_angle = convert_str2list(image_list)
-		forwardBend_angle_list.append(list_angle)
+# print(len(forwardBend_angle_list))
+# forwardBend_angle_list = np.array(forwardBend_angle_list)
 
-print(len(forwardBend_angle_list))
-forwardBend_angle_list = np.array(forwardBend_angle_list)
+# for i in range(len(forwardBend_angle_list)):
+# 	print(forwardBend_angle_list[i])
 
-for i in range(len(forwardBend_angle_list)):
-	print(forwardBend_angle_list[i])
+if __name__ == '__main__':
+    with mp_pose.Pose(
+            static_image_mode=True,
+            model_complexity=2,
+            enable_segmentation=True,
+            min_detection_confidence=0.5) as pose:
+        for idx, file in enumerate(IMAGE_FILES):
+            image = cv2.imread(file)
+            image_height, image_width, _ = image.shape
+            # Convert the BGR image to RGB before processing.
+            results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-# if __name__ == '__main__':
-#     with mp_pose.Pose(
-#             static_image_mode=True,
-#             model_complexity=2,
-#             enable_segmentation=True,
-#             min_detection_confidence=0.5) as pose:
-#         for idx, file in enumerate(IMAGE_FILES):
-#             image = cv2.imread(file)
-#             image_height, image_width, _ = image.shape
-#             # Convert the BGR image to RGB before processing.
-#             results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-
-#             if not results.pose_landmarks:
-#                 continue
-#             print(
-#                 f'Nose coordinates: ('
-#                 f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE].x * image_width}, '
-#                 f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE].y * image_height})'
-#             )
-#             for idx, landmark in enumerate(results.pose_landmarks.landmark):
-#                 landmark_px = normalized_to_pixel_coordinates(landmark.x, landmark.y, image_width, image_height)
-#                 landmarks = results.pose_landmarks.landmark
-#             # Get coordinates
-#             shoulder_right = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
-#             elbow_right = [landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
-#             wrist_right = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
-#             shoulder_left = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
-#             hip_left = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
-#             ankle_left = [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
-#             hip_right = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
-#             ankle_right = [landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]
-#             knee_right = [landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].y]
-#             knee_left = [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y]
-#             elbow_left = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
-#             wrist_left = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
-#             # Calculate angle
-#             angle_1 = calculate_angle(shoulder_right, elbow_right, wrist_right)
-#             angle_2 = calculate_angle(shoulder_left, elbow_left, wrist_left)
-#             angle_3 = calculate_angle(elbow_right, shoulder_right, hip_right)
-#             angle_4 = calculate_angle(elbow_left, shoulder_left,hip_left)
-#             angle_5 = calculate_angle(shoulder_right, hip_right, knee_right)
-#             angle_6 = calculate_angle(shoulder_left, hip_left, knee_left)
-#             angle_7 = calculate_angle(hip_right, knee_right, ankle_right)
-#             angle_8 = calculate_angle(hip_left, knee_left, ankle_left)
+            if not results.pose_landmarks:
+                continue
+            print(
+                f'Nose coordinates: ('
+                f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE].x * image_width}, '
+                f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE].y * image_height})'
+            )
+            for idx, landmark in enumerate(results.pose_landmarks.landmark):
+                landmark_px = normalized_to_pixel_coordinates(landmark.x, landmark.y, image_width, image_height)
+                landmarks = results.pose_landmarks.landmark
+            # Get coordinates
+            shoulder_right = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+            elbow_right = [landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
+            wrist_right = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
+            shoulder_left = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+            hip_left = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
+            ankle_left = [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
+            hip_right = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
+            ankle_right = [landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]
+            knee_right = [landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].y]
+            knee_left = [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y]
+            elbow_left = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
+            wrist_left = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
+            # Calculate angle
+            angle_1 = calculate_angle(shoulder_right, elbow_right, wrist_right)
+            angle_2 = calculate_angle(shoulder_left, elbow_left, wrist_left)
+            angle_3 = calculate_angle(elbow_right, shoulder_right, hip_right)
+            angle_4 = calculate_angle(elbow_left, shoulder_left,hip_left)
+            angle_5 = calculate_angle(shoulder_right, hip_right, knee_right)
+            angle_6 = calculate_angle(shoulder_left, hip_left, knee_left)
+            angle_7 = calculate_angle(hip_right, knee_right, ankle_right)
+            angle_8 = calculate_angle(hip_left, knee_left, ankle_left)
 			
-#             lic1 = [angle_1, angle_2, angle_3, angle_4, angle_5, angle_6, angle_7, angle_8]
-#             print(lic1)
-#             forwardBend_angle_list.append(lic1)
+            lic1 = [angle_1, angle_2, angle_3, angle_4, angle_5, angle_6, angle_7, angle_8]
+            print(lic1)
+            forwardBend_angle_list.append(lic1)
 
-#             with open("data\data.txt", "a") as file:
-#                 for i in range(len(lic1)):
-#                     file.write(str(round(lic1[i])) + " ")
-#                 file.write("\n")
+            with open("data\data.txt", "a") as file:
+                for i in range(len(lic1)):
+                    file.write(str(round(lic1[i])) + " ")
+                file.write("\n")
 
-#             is_yoga_pose, color, mask = pose_detection(lic1, FORWARD_BAND_LIST)
-#             print(is_yoga_pose)
+            is_yoga_pose, color, mask = pose_detection(lic1, FORWARD_BAND_LIST)
+            print(is_yoga_pose)
 
-#             # Print Pose_detection
-#             cv2.putText(image, is_yoga_pose + str(": ") + str(mask), (10, 30),cv2.FONT_HERSHEY_PLAIN, 2, color, 2)
+            # Print Pose_detection
+            cv2.putText(image, is_yoga_pose + str(": ") + str(mask), (10, 30),cv2.FONT_HERSHEY_PLAIN, 2, color, 2)
 
-#             annotated_image = image.copy()
-#             # Draw segmentation on the image.
-#             # To improve segmentation around boundaries, consider applying a joint
-#             # bilateral filter to "results.segmentation_mask" with "image".
-#             # print(results.segmentation_mask)
+            annotated_image = image.copy()
+            # Draw segmentation on the image.
+            # To improve segmentation around boundaries, consider applying a joint
+            # bilateral filter to "results.segmentation_mask" with "image".
+            # print(results.segmentation_mask)
 			
-#             condition = np.stack((results.segmentation_mask,) * 3, axis=-1) > 0.1
-#             bg_image = np.zeros(image.shape, dtype=np.uint8)
-#             bg_image[:] = BG_COLOR
-#             annotated_image = np.where(condition, annotated_image, bg_image)
+            condition = np.stack((results.segmentation_mask,) * 3, axis=-1) > 0.1
+            bg_image = np.zeros(image.shape, dtype=np.uint8)
+            bg_image[:] = BG_COLOR
+            annotated_image = np.where(condition, annotated_image, bg_image)
 
-#             # Draw the pose annotation on the image.
-#             image.flags.writeable = True
-#             # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-#             mp_drawing.draw_landmarks(
-#                 image,
-#                 results.pose_landmarks,
-#                 mp_pose.POSE_CONNECTIONS,
-#                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-#             # Flip the image horizontally for a selfie-view display.
-#             cv2.imshow('MediaPipe Pose',image)
+            # Draw the pose annotation on the image.
+            image.flags.writeable = True
+            # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            mp_drawing.draw_landmarks(
+                image,
+                results.pose_landmarks,
+                mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+            # Flip the image horizontally for a selfie-view display.
+            cv2.imshow('MediaPipe Pose',image)
 
-#             # Draw pose landmarks on the image.
-#             mp_drawing.draw_landmarks(
-#                 annotated_image,
-#                 results.pose_landmarks,
-#                 mp_pose.POSE_CONNECTIONS,
-#                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-#             cv2.imwrite('/tmp/annotated_image' + str(idx) + '.png', annotated_image)
+            # Draw pose landmarks on the image.
+            mp_drawing.draw_landmarks(
+                annotated_image,
+                results.pose_landmarks,
+                mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+            cv2.imwrite('/tmp/annotated_image' + str(idx) + '.png', annotated_image)
 			# # Plot pose world landmarks.
 			# mp_drawing.plot_landmarks(
 			#     results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
