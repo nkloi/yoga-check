@@ -43,19 +43,19 @@ FORWARD_BAND_LIST = [FORWARD_BAND_1, FORWARD_BAND_2, FORWARD_BAND_3, FORWARD_BAN
 # IMAGE_FILES.append('image\\forwardBend375.jpg')
 # IMAGE_FILES.append('image\\forwardBend500.jpg')
 
-for i in range(30):
+for i in range(60):
 	address_image = 'data\\forwardBend500\\' + str(i+1) + '.' + 'jpg'
 	IMAGE_FILES.append(address_image)
 
-for i in range(30):
+for i in range(60):
 	address_image = 'data\\forwardBend375\\' + str(i+1) + '.' + 'jpg'
 	IMAGE_FILES.append(address_image)
 
-for i in range(30):
+for i in range(60):
 	address_image = 'data\\forwardBend250\\' + str(i+1) + '.' + 'jpg'
 	IMAGE_FILES.append(address_image)
 
-for i in range(30):
+for i in range(60):
 	address_image = 'data\\forwardBend125\\' + str(i+1) + '.' + 'jpg'
 	IMAGE_FILES.append(address_image)
 
@@ -140,7 +140,7 @@ forwardBend_angle_list = []
 
 # with open("data\data.txt", "r") as file:
 	
-# 	for i in range(120):
+# 	for i in range(240):
 # 		image_list = file.readline()
 # 		list_angle = convert_str2list(image_list)
 # 		forwardBend_angle_list.append(list_angle)

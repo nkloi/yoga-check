@@ -14,7 +14,7 @@ def convert_str2list(image_list):
 forwardBend_angle_list = []
 
 with open("data/data.txt") as file:
-	for i in range(120):
+	for i in range(240):
 		image_list = file.readline()
 		list_angle = convert_str2list(image_list)
 		forwardBend_angle_list.append(list_angle)
