@@ -44,19 +44,19 @@ FORWARD_BAND_LIST = [FORWARD_BAND_1, FORWARD_BAND_2, FORWARD_BAND_3, FORWARD_BAN
 
 for i in range(60):
     address_image = 'data\\forwardBend500\\' + str(i + 1) + '.' + 'jpg'
-    IMAGE_FILES.append(address_image)
+    IMAGE_FILES.append([address_image, 3])
 
 for i in range(60):
     address_image = 'data\\forwardBend375\\' + str(i + 1) + '.' + 'jpg'
-    IMAGE_FILES.append(address_image)
+    IMAGE_FILES.append([address_image, 2])
 
 for i in range(60):
     address_image = 'data\\forwardBend250\\' + str(i + 1) + '.' + 'jpg'
-    IMAGE_FILES.append(address_image)
+    IMAGE_FILES.append([address_image, 1])
 
 for i in range(60):
     address_image = 'data\\forwardBend125\\' + str(i + 1) + '.' + 'jpg'
-    IMAGE_FILES.append(address_image)
+    IMAGE_FILES.append([address_image, 0])
 
 # IMAGE_FILES.append('data\\forwardBend375\\19.jpg')
 
@@ -164,8 +164,11 @@ if __name__ == '__main__':
             model_complexity=2,
             enable_segmentation=True,
             min_detection_confidence=0.5) as pose:
+        with open("data\data.txt", "a") as file:
+            file.write("angle_1,angle_2,angle_3,angle_4,angle_5,angle_6,angle_7,angle_8,angle_9,angle_10,ground_truth")
+            file.write("\n")
         for idx, file in enumerate(IMAGE_FILES):
-            image = cv2.imread(file)
+            image = cv2.imread(file[0])
             image_height, image_width, _ = image.shape
             # Convert the BGR image to RGB before processing.
             results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
@@ -222,133 +225,14 @@ if __name__ == '__main__':
             angle_9 = calculate_angle(elbow_left, wrist_left, index_left)
             angle_10 = calculate_angle(elbow_right, wrist_right, index_right)
 
-            lic1 = [angle_1, angle_2, angle_3, angle_4, angle_5, angle_6, angle_7, angle_8, angle_9, angle_10]
+            lic1 = [angle_1, angle_2, angle_3, angle_4, angle_5, angle_6, angle_7, angle_8, angle_9, angle_10, file[1]]
             print(lic1)
             forwardBend_angle_list.append(lic1)
 
             with open("data\data.txt", "a") as file:
                 for i in range(len(lic1)):
-                    file.write(str(round(lic1[i])) + " ")
+                    if i < len(lic1) - 1:
+                        file.write(str(round(lic1[i])) + ",")
+                    else:
+                        file.write(str(round(lic1[i])))
                 file.write("\n")
-
-            # is_yoga_pose, color, mask = pose_detection(lic1, FORWARD_BAND_LIST)
-            # print(is_yoga_pose)
-            #
-            # # Print Pose_detection
-            # cv2.putText(image, is_yoga_pose + str(": ") + str(mask), (10, 30), cv2.FONT_HERSHEY_PLAIN, 2, color, 2)
-            #
-            # annotated_image = image.copy()
-            # # Draw segmentation on the image.
-            # # To improve segmentation around boundaries, consider applying a joint
-            # # bilateral filter to "results.segmentation_mask" with "image".
-            # # print(results.segmentation_mask)
-            #
-            # condition = np.stack((results.segmentation_mask,) * 3, axis=-1) > 0.1
-            # bg_image = np.zeros(image.shape, dtype=np.uint8)
-            # bg_image[:] = BG_COLOR
-            # annotated_image = np.where(condition, annotated_image, bg_image)
-            #
-            # # Draw the pose annotation on the image.
-            # image.flags.writeable = True
-            # # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            # mp_drawing.draw_landmarks(
-            #     image,
-            #     results.pose_landmarks,
-            #     mp_pose.POSE_CONNECTIONS,
-            #     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-            # # Flip the image horizontally for a selfie-view display.
-            # cv2.imshow('MediaPipe Pose', image)
-            #
-            # # Draw pose landmarks on the image.
-            # mp_drawing.draw_landmarks(
-            #     annotated_image,
-            #     results.pose_landmarks,
-            #     mp_pose.POSE_CONNECTIONS,
-            #     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-            # cv2.imwrite('/tmp/annotated_image' + str(idx) + '.png', annotated_image)
-        # # Plot pose world landmarks.
-        # mp_drawing.plot_landmarks(
-        #     results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
-
-    # For webcam input:
-    # cap = cv2.VideoCapture(0)
-    # with mp_pose.Pose(
-    #         min_detection_confidence=0.5,
-    #         min_tracking_confidence=0.5) as pose:
-    #     while cap.isOpened():
-    #         success, image = cap.read()
-    #         if not success:
-    #             print("Ignoring empty camera frame.")
-    #             # If loading a video, use 'break' instead of 'continue'.
-    #             continue
-    #
-    #         # To improve performance, optionally mark the image as not writeable to
-    #         # pass by reference.
-    #         image.flags.writeable = False
-    #         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    #         image = cv2.flip(image, 1)
-    #         results = pose.process(image)
-    #         image_rows, image_cols, _ = image.shape
-    #
-    #         lic = {'angle_1': 'elbow_right', 'angle_2': 'elbow_left', 'angle_3': 'shoulder_right', 'angle_4': 'shoulder_left', 'angle_5': 'hip_right', 'angle_6': 'hip_left', 'angle_7': 'knee_right', 'angle_8':'knee_left'}
-    #         for idx, landmark in enumerate(results.pose_landmarks.landmark):
-    #             idx_to_coordinates = {}
-    #             if ((landmark.HasField('visibility') and
-    #                  landmark.visibility < VISIBILITY_THRESHOLD) or
-    #                     (landmark.HasField('presence') and
-    #                      landmark.presence < PRESENCE_THRESHOLD)):
-    #                 continue
-    #
-    #             landmark_px = normalized_to_pixel_coordinates(landmark.x, landmark.y, image_cols, image_rows)
-    #             landmarks = results.pose_landmarks.landmark
-    #
-    #             # Get coordinates
-    #             shoulder_right = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
-    #             elbow_right = [landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
-    #             wrist_right = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
-    #             shoulder_left = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
-    #             hip_left = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x,landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
-    #             ankle_left = [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
-    #             hip_right = [landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
-    #             ankle_right = [landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]
-    #             knee_right = [landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value].y]
-    #             knee_left = [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x,landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y]
-    #             elbow_left = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
-    #             wrist_left = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
-    #             # Calculate angle
-    #             angle_1 = calculate_angle(shoulder_right, elbow_right, wrist_right)
-    #             angle_2 = calculate_angle(shoulder_left, elbow_left, wrist_left)
-    #             angle_3 = calculate_angle(elbow_right, shoulder_right, hip_right)
-    #             angle_4 = calculate_angle(elbow_left, shoulder_left,hip_left)
-    #             angle_5 = calculate_angle(shoulder_right, hip_right, knee_right)
-    #             angle_6 = calculate_angle(shoulder_left, hip_left, knee_left)
-    #             angle_7 = calculate_angle(hip_right, knee_right, ankle_right)
-    #             angle_8 = calculate_angle(hip_left, knee_left, ankle_left)
-    #
-    #             lic1 = [angle_1, angle_2, angle_3, angle_4, angle_5, angle_6, angle_7, angle_8]
-    #             lic2 = [elbow_right, elbow_left, shoulder_right,shoulder_left, hip_right, hip_left, knee_right, knee_left ]
-    #             # Visualize angle
-    #             # lic = round([angle_1, angle_2, angle_3, angle_4, angle_5,angle_6,angle_7,angle_8],2)
-    #             # lic = {'angle_1': 'elbow_right', 'angle_2': 'elbow_left', 'angle_3': 'shoulder_right', 'angle_4': 'shoulder_left', 'angle_5': 'hip_right', 'angle_6': 'hip_left', 'angle_7': 'knee_right', 'angle_8':'knee_left'}
-    #             print(lic1)
-    #             is_yoga_pose, color, mask = pose_detection(lic1, FORWARD_BAND_LIST)
-    #             print(is_yoga_pose)
-    #             cv2.putText(image, is_yoga_pose + str(": ") + str(mask), (10, 30),cv2.FONT_HERSHEY_PLAIN, 2, color, 2)
-    #             for i in range(len(lic1)):
-    #                 cv2.putText(image, str(round(lic1[i],2)),
-    #                             tuple(np.multiply(lic2[i], [640, 480]).astype(int)),
-    #                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA
-    #                                     )
-    #         # Draw the pose annotation on the image.
-    #         image.flags.writeable = True
-    #         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    #         mp_drawing.draw_landmarks(
-    #             image,
-    #             results.pose_landmarks,
-    #             mp_pose.POSE_CONNECTIONS,
-    #             landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-    #         # Flip the image horizontally for a selfie-view display.
-    #         cv2.imshow('MediaPipe Pose',image)
-    #         if cv2.waitKey(5) & 0xFF == ord('q'):
-    #             break
-    # cap.release()

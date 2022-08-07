@@ -58,7 +58,20 @@ FORWARD_BAND_LIST = [FORWARD_BAND_1, FORWARD_BAND_2, FORWARD_BAND_3, FORWARD_BAN
 #     IMAGE_FILES.append(address_image)
 
 
+# angle_predict= np.array([[170, 175, 69 ,70, 74 ,73, 179, 177 ]])
+
+angle_accuracy_500 = np.array([161, 161, 115, 115, 32, 32, 174, 176, 120, 120])
+angle_accuracy_375 = np.array([166, 164, 121, 119, 44, 43, 173, 173, 120, 120])
+angle_accuracy_200 = np.array([173, 172, 113, 112, 60, 60, 175, 175, 120, 120])
+angle_accuracy_125 = np.array([167, 166, 54, 54, 79, 79, 175, 175, 120, 120])
+
+angle_accuracy_list = [angle_accuracy_125, angle_accuracy_200, angle_accuracy_375, angle_accuracy_500]
+weight_file = 'forwardBend.h5'
+
 IMAGE_FILES.append('image\\amit.jpg')
+IMAGE_FILES.append('image\\flex.jpg')
+IMAGE_FILES.append('image\\loi.jpg')
+IMAGE_FILES.append('image\\yoga_easy.jpg')
 
 BG_COLOR = (192, 192, 192)  # gray
 LIST_POST = ["NOSE", "LEFT_EYE_INNER", "LEFT_EYE", "LEFT_EYE_OUTER", "RIGHT_EYE_INNER", "RIGHT_EYE", "RIGHT_EYE_OUTER",
@@ -130,17 +143,6 @@ def normalized_to_pixel_coordinates(
     x_px = min(math.floor(normalized_x * image_width), image_width - 1)
     y_px = min(math.floor(normalized_y * image_height), image_height - 1)
     return (x_px, y_px)
-
-
-# angle_predict= np.array([[170, 175, 69 ,70, 74 ,73, 179, 177 ]])
-
-angle_accuracy_500 = np.array([161, 161, 115, 115, 32, 32, 174, 176, 120, 120])
-angle_accuracy_375 = np.array([166, 164, 121, 119, 44, 43, 173, 173, 120, 120])
-angle_accuracy_200 = np.array([173, 172, 113, 112, 60, 60, 175, 175, 120, 120])
-angle_accuracy_125 = np.array([167, 166, 54, 54, 79, 79, 175, 175, 120, 120])
-
-angle_accuracy_list = [angle_accuracy_125, angle_accuracy_200, angle_accuracy_375, angle_accuracy_500]
-weight_file = 'viet2.h5'
 
 
 def score_mask_class(weight_file, angle_predict):
