@@ -59,7 +59,7 @@ FORWARD_BAND_LIST = [FORWARD_BAND_1, FORWARD_BAND_2, FORWARD_BAND_3, FORWARD_BAN
 #     IMAGE_FILES.append(address_image)
 
 
-IMAGE_FILES.append('image\\forwardBend500.jpg')
+# IMAGE_FILES.append('data\\test.jpg')
 
 
 BG_COLOR = (192, 192, 192)  # gray
