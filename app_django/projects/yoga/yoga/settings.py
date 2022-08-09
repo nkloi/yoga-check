@@ -76,13 +76,22 @@ WSGI_APPLICATION = "yoga.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": 'yoga',
+#         "USER" : 'postgres',
+#         "PASSWORD" : '123456',
+#         "HOST" : 'localhost'
+#     }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": 'yoga',
-        "USER" : 'postgres',
-        "PASSWORD" : '123456',
-        "HOST" : 'localhost'
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'yogaCheck',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
